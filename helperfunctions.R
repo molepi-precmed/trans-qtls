@@ -9,7 +9,7 @@ v.select.matched <- function(vec1, y) {
     sapply(vec1, select.matched, y)
 }
 
-#! returns a logical vector, i th element TRUE if one of the strings in vec1[i] is matched by one of the strings in vec2[i]  
+#! returns a logical vector, i th element TRUE if one of the strings in vec1[i] is matched by one of the strings in vec2[i]
 matchedin.elementwise <- function(vec1, vec2) { # vec1 and vec2 are vectors of comma-separated strings, of same length
     N <- length(vec1)
     matched <- logical(N)
@@ -269,7 +269,7 @@ manhattan <- function(results, point.size=1) {
                            minor_breaks = chrom.breaks) +
         theme(panel.grid.major.x = element_blank()) +
         scale_y_continuous(expand=expansion(add = c(0, 1)),
-                           breaks=c(0, 5, 10, 15, 20)) + 
+                           breaks=c(0, 5, 10, 15, 20)) +
         labs(y = expression(paste(-log[10], " ", italic(p))),
              x = "Chromosome") +
         theme(legend.position="none") +
@@ -295,6 +295,10 @@ position.absolute <- function(CHR, BP, padding=0) {
 
 ## lift positions from hg19 (GRCh37) to hg38
 liftover.positions <- function(CHR, BP) {
+    positions37.bed <- file.path("helper-data", "positions37.bed")
+    positions38.bed <- file.path("helper-data", "positions38.bed")
+    chain.file <- file.path("helper-data", "hg19ToHg38.over.chain")
+
     positions37 <- data.table(CHR, BP=as.integer(BP))
     positions37[, rowname := sprintf("row%09d", .I)]
     write.table(positions37[, .(chrom=paste0("chr", CHR),
@@ -302,9 +306,10 @@ liftover.positions <- function(CHR, BP) {
                               chromEnd=BP,
                               name=rowname)],
                 row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t",
-                file="positions37.bed")
-    system("./liftOver positions37.bed hg19ToHg38.over.chain positions38.bed unMapped")
-    positions38 <- fread("positions38.bed")
+                file=positions37.bed)
+    cmd <- sprintf("liftOver %s %s %s unMapped",
+                   positions37.bed, chain.file, positions38.bed)
+    positions38 <- fread(positions38.bed)
     positions38 <- positions38[, c(4, 2)]
     colnames(positions38) <- c("rowname", "pos.hg38")
     setkey(positions38, rowname)
@@ -313,4 +318,4 @@ liftover.positions <- function(CHR, BP) {
     setorder(positions, rowname)
     return(positions[, pos.hg38])
 }
-    
+

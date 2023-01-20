@@ -1,5 +1,9 @@
-library(data.table)
-library(readxl)
+#' We collated a data table of T1D gene annotations from various studies (see
+#' code below) which helps annotating the computed scores in the downstream
+#' analysis. We include the code as is as an example of how similar can be
+#' achieved for other diseases.
+#' The raw data supplied with the papers is stored in `helper-data` subdirectory
+## =============================================================================
 
 ## Robertson CC, Inshaw JRJ, Onengut-Gumuscu S, Chen W-M, Santa Cruz DF, Yang H, et al. Fine-mapping, trans-ancestral and genomic analyses identify causal variants, cells, genes and drug targets for type 1 diabetes. Nat Genet. 2021;53: 962–971. doi:10.1038/s41588-021-00880-5
 ## 78 genomic regions
@@ -30,8 +34,7 @@ t1d.genes <- t1d.genes[, .(chromosome=chrom, position=pos, pValue,
                            clumpStart, clumpEnd), nearest]
 ## additional hits identified by testing for dominant/recessive models
 helper.file <- file.path("helper-data", "NIHMS1701167-supplement-Supplementary_Tables.xlsx")
-t1d.extragenes <- as.data.table(readxl::read_excel(,helper.file
-                                           sheet="ST9", skip=2))
+t1d.extragenes <- as.data.table(readxl::read_excel(helper.file, sheet="ST9", skip=2))
 setnames(t1d.extragenes, "Candidate Gene", "nearest")
 ## clump range not given, use flanking regions of size 20kb
 t1d.extragenes <- t1d.extragenes[, .(chromosome, position,
@@ -55,8 +58,7 @@ t1d.hits[is.na(position), position := position.hg19 + clumpEnd - clumpEnd.hg19]
 
 ## Vujkovic M. Discovery of 318 new risk loci for type 2 diabetes and related vascular outcomes among 1.4 million participants in a multi-ancestry meta-analysis. Nat Genet. 2020 Jul;52(7):680-691. doi:10.1038/s41588-020-0637-y.
 helper.file <- file.path("helper-data", "NIHMS1589535-supplement-1589535_Supp_Tab1-26.xlsx")
-t2d.hits <- as.data.table(readxl::read_excel(,helper.file
-                                      sheet="T5", skip=2))
+t2d.hits <- as.data.table(readxl::read_excel(helper.file, sheet="T5", skip=2))
 t2d.hits <- t2d.hits[, .(CHR, BP, P, NearestGene)]
 colnames(t2d.hits) <- c("chromosome", "position", "pValue", "nearest")
 t2d.hits[, pValue := as.numeric(pValue)]
