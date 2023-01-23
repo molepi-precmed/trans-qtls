@@ -28,6 +28,9 @@ library(extraDistr)
 library(genoscores)
 library(ggcorrplot)
 library(ggrepel)
+library(parallel)
+library(foreach)
+
 source("helperfunctions.R")
 
 ##------------------------------------------------------------------------------
@@ -123,26 +126,39 @@ source("gw.trans.scores.R")
 #' create a table of annotations for genes implicated in the disease of interest
 #' (T1D and T2D in this case).
 ##------------------------------------------------------------------------------
-
 ## (optional) load the script to create a table of annotated genes implicated in
 ## the disease of interest
 source("diabetesgenes.R")
 
 ## load eQTL or pQTL scores and metadata depending on `analysis` variable
-## TODO: test that this script is correct
 score.dir <- output.dir
 source("qtl.metadata.R")
 
+##------------------------------------------------------------------------------
+#' STEP 4: Load binary of continuous phenotype and match samples between scores
+#' and the phenotype.
+##------------------------------------------------------------------------------
 pheno.file <- file.path(...)
 
-## TODO: write guidelines in the script
+## script below is a short guideline. You may need to extend it according to the
+## specific analysis requirements.
 source("phenotype.R")
 
-## TODO: clean the code and check that scores are annotated correctly
-source("eqtls.R")
-source("pqtls.R")
+##------------------------------------------------------------------------------
+#' STEP 5: Compute associations between the scores and the phenotype of
+#' interest.
+##------------------------------------------------------------------------------
+#' @param binary Logical specifying if case/control (TRUE) or continuous (FALSE)
+#'        phenotype is to be analysed.
+#' @param output.dir Full path to the directory where the association results
+#'        will be saved.
+binary <- TRUE
+output.dir <- file.path(...)
 
-## TODO: add further steps and an example report
+## register parallelisation mode to run several chromosomes at a time
+options(cores=4)
+
+source("association.R")
 
 ## show memory use
 objmem <- 1E-6 * sapply(ls(), function(x) {object.size(get(x))})
@@ -151,5 +167,3 @@ obj.dt <- data.table(object=objects(), memory=objmem, class=objclass)
 setorder(obj.dt, -memory)
 obj.dt[1:5, ]
 gc()
-
-

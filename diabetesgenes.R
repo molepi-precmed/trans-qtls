@@ -89,7 +89,6 @@ setnames(genes.info, "gene_chrom", "chromosome")
 genes.info[, x.gene_startpos := position.absolute(chromosome, gene_startpos)]
 genes.info[, x.gene_endpos := position.absolute(chromosome, gene_endpos)]
 
-
 ## annotate genes.info with t1d-associated and t2d-associated genes that overlap the transcription site of the gene
 
 setkey(genes.info, x.gene_startpos, x.gene_endpos)
@@ -114,8 +113,6 @@ t2d.overlaps <- foverlaps(genes.info[, .(gene_symbol, x.gene_startpos, x.gene_en
 
 ## to annotate the clumps of SNPs contributing to QTLs with T1D hits, we should find overlaps between the clumps of eQTL SNPs and the clumps of SNPs in t1d.hits, and annotate the eQTL with the "nearest" field. This will identify for instance FUT2 as the "nearest" gene contributing to the cis-eQTL for NECTIN2.
 
-
-## allscores.info has 6622 rows, with comma-separated string of regions for each matrix.colname
 setkey(genes.info, gene_symbol)
 
 genes.info[, is.t1dgene := gene_symbol %in% t1d.hits$nearest]
