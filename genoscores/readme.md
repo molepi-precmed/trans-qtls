@@ -2,7 +2,7 @@
 
 We compute the regional scores in the specified target cohort using weights from GENOSCORES database.
 
-1. [example.analysis.R](example.analysis.R) is an example R script containing the instructions for computing scores. Please reas carefully to understand the procedure. The things which have to be modified in this script are:
+1. [example.analysis.R](example.analysis.R) is an example R script containing the instructions for computing scores. Please read carefully to understand the procedure. The things which have to be modified in this script are:
   - `studyids` -- see https://genoscores.cphs.mvm.ed.ac.uk/studies for the list of available studies. For example: `studyid<-36` for eQTLGen.
   - `ancestries` set to `EUR` unless using a multi-ncestry study. 
   - `ld.refplinkfile` specify a full path to the LD reference file in PLINK format. If required, we can provide the latest release of 1000 Genomes in hg38.
