@@ -99,7 +99,8 @@ output.dir <- file.path(...)
 basename <- file.path(...)
 gscript <- file.path("genoscores", "example.analysis.R")
 
-cmd <- sprintf("bash analysis.cli.sh %s %s %s", output.dir, basename, gscript)
+cmd <- sprintf("bash genoscores/analysis.cli.sh %s %s %s",
+               output.dir, basename, gscript)
 system(cmd)
 
 ##------------------------------------------------------------------------------
