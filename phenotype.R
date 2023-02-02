@@ -3,7 +3,8 @@
 #' samples samples in the scores and in the phenotype.
 ## =============================================================================
 ## read individual-level phenotype dataset
-phenotype <- fread(pheno.file)
+pheno.str <- ifelse(skip.second, paste0("sed -e '2d' ",pheno.file), pheno.file)
+phenotype <- fread(cmd=pheno.str)
 
 ## by default GENOSCORES merges the family id (FID) and individual id (IID)
 ## into a single identifier: FID_IID. You may need to ensure that sample ids in

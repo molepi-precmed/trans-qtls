@@ -23,7 +23,7 @@ coeffs <- NULL
 model.family <- ifelse(binary, "binomial", "gaussian")
 if(newrun) {
     coeffs <- foreach(scoreid=scoreids, .combine=rbind) %dopar% {
-        score.model <- glm(formula=PHENO ~ get(scoreid) + PC1 + PC2 + PC3,
+        score.model <- glm(formula=PHENO ~ get(scoreid) + sex + age_diag + duration.cpeptide + PC1 + PC2 + PC3,
                            family=model.family,
                            data=phenotype.scores)
         coeff <- summary(score.model)$coefficients[2, , drop=FALSE]
@@ -64,15 +64,15 @@ table(coeffs$qtl_type, exclude=NULL)
 
 ## manage cis, cis-x and trans labels
 coeffs[is.na(qtl_type), qtl_type :=
-       ifelse(substr(matrix.colname, 1, 2) == "X_", "trans", "cis")]
-coeffs[is.na(qtl_type) & qtl_type=="cis", gene_symbol := matrix.colname]
+       ifelse(substr(matrix.colname, nchar(matrix.colname)-4, nchar(matrix.colname)) == "trans", "trans", "cis")]
+#coeffs[is.na(qtl_type) & qtl_type=="cis", gene_symbol := matrix.colname]
 coeffs[, cisx := ifelse(qtl_type=="cis-x", 1, 0)]
 coeffs[qtl_type=="cis-x", qtl_type := "cis"]
 
 ## temporary fix for unmatched gene_symbol -- but these rows have regions NA
 # coeffs[is.na(gene_symbol) & substr(matrix.colname, 1, 2) != "X_", gene_symbol := matrix.colname]
 
-coeffs[, chromosome := factor(chromosome, levels=c(1:22, "X", "Y"))]
+#coeffs[, chromosome := factor(chromosome, levels=c(1:22, "X", "Y"))]
 
 ## compute standardize log odds ratio
 if (binary) coeffs[, Estimate := Estimate * sdscore]
@@ -90,22 +90,24 @@ coeffs.unique <- unique(coeffs, by=c("gene_symbol", "qtl_type"))
 ## effects
 if (analysis == "eQTL") {
     coeffs.wide <- dcast(coeffs.unique,
-                         gene_symbol + chromosome + gene_startpos + gene_endpos ~ qtl_type,
+                         gene_symbol + gene_chrom + gene_startpos + gene_endpos ~ qtl_type,
                          value.var=c("regions",
                                      "locus.diversity", "numscores", "Estimate", "pvalue",
                                      "minuslog10p"))
+	setnames(coeffs.wide, "regions_trans", "regions")
+	setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 }
 if (analysis == "pQTL") {
     coeffs.wide <- dcast(coeffs.unique,
                          gene_symbol + gene_chrom + gene_startpos + gene_endpos ~ qtl_type,
                          value.var=c("numscores", "Estimate", "pvalue", "locus.diversity",
                                      "minuslog10p"))
+	setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 }
 
 setkey(coeffs.wide, gene_symbol)
 setkey(genes.info, gene_symbol)
-setnames(coeffs.wide, "regions_trans", "regions")
-setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
+
 
 ## merge coeffs.wide with annotation of known T1D and T2D genes
 coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
@@ -113,3 +115,5 @@ coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
 
 ## annotate genes by whether they are known cause for monogenic diabetes
 coeffs.wide[, monogenic := ifelse(gene_symbol %in% t1d.monogenes, "+", ".")]
+
+write.csv(coeffs.wide,'~/Desktop/coeffs.csv')

@@ -95,13 +95,13 @@ newrun=TRUE
 #' @note You can create multiple example scripts - each for a different study,
 #'         or you can provide a vector of many studies to `example.analysis.R`.
 
-output.dir <- file.path(...)
-basename <- file.path(...)
-gscript <- file.path("genoscores", "example.analysis.R")
-
-cmd <- sprintf("bash genoscores/analysis.cli.sh %s %s %s",
-               output.dir, basename, gscript)
-system(cmd)
+output.dir <- '/opt/shared/project/type1bio/data/gwas_analysis/mrc_canada/trans_scores/type1bio_pqtls'#file.path(...)
+#basename <- file.path(...)
+#gscript <- file.path("genoscores", "example.analysis.R")
+#
+#cmd <- sprintf("bash genoscores/analysis.cli.sh %s %s %s",
+#               output.dir, basename, gscript)
+#system(cmd)
 
 ##------------------------------------------------------------------------------
 #' STEP 2: Load regional scores, classify into cis, cis-x and trans and
@@ -116,11 +116,11 @@ system(cmd)
 #'        should typically be the same as `outputdir` above.
 #' @param output.dir Full path to the directory where the aggregated scores
 #'        will be saved.
-analysis <- ...
+analysis <- 'pQTL'
 score.dir <- output.dir
-output.dir <- file.path(...)
+#output.dir <- file.path(...)
 
-source("gw.trans.scores.R")
+#source("gw.trans.scores.R")
 
 ##------------------------------------------------------------------------------
 #' STEP 3: Load computed genome-wide trans scores and the metadata. Optionally
@@ -139,7 +139,10 @@ source("qtl.metadata.R")
 #' STEP 4: Load binary of continuous phenotype and match samples between scores
 #' and the phenotype.
 ##------------------------------------------------------------------------------
-pheno.file <- file.path(...)
+pheno.file <- '/opt/shared/project/type1bio/data/gwas_analysis/mrc_canada/cpeptide/phenotypes/PHENO_T1DM_T1B_SODCPEP_NOREL_NOMODY_NOPT2_NOCPEPAB_NONEO_NORELPCA.samples'#file.path(...)
+
+# Set to TRUE for snptest-style phenotype files with two header lines
+skip.second = TRUE
 
 ## script below is a short guideline. You may need to extend it according to the
 ## specific analysis requirements.
@@ -153,8 +156,8 @@ source("phenotype.R")
 #'        phenotype is to be analysed.
 #' @param output.dir Full path to the directory where the association results
 #'        will be saved.
-binary <- TRUE
-output.dir <- file.path(...)
+binary <- FALSE
+#output.dir <- file.path(...)
 
 ## register parallelisation mode to run several chromosomes at a time
 options(cores=4)
