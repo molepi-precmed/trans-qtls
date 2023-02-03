@@ -23,7 +23,7 @@ coeffs <- NULL
 model.family <- ifelse(binary, "binomial", "gaussian")
 if(newrun) {
     coeffs <- foreach(scoreid=scoreids, .combine=rbind) %dopar% {
-        score.model <- glm(formula=PHENO ~ get(scoreid) + sex + age_diag + duration.cpeptide + PC1 + PC2 + PC3,
+        score.model <- glm(formula=PHENO ~ get(scoreid) + PC1 + PC2 + PC3,
                            family=model.family,
                            data=phenotype.scores)
         coeff <- summary(score.model)$coefficients[2, , drop=FALSE]
@@ -63,9 +63,7 @@ table(coeffs$qtl_type, exclude=NULL)
 ## for converting the results to format which is easy to use in publication.
 
 ## manage cis, cis-x and trans labels
-coeffs[is.na(qtl_type), qtl_type :=
-       ifelse(substr(matrix.colname, nchar(matrix.colname)-4, nchar(matrix.colname)) == "trans", "trans", "cis")]
-#coeffs[is.na(qtl_type) & qtl_type=="cis", gene_symbol := matrix.colname]
+coeffs[is.na(qtl_type), qtl_type := ifelse(grep("trans$", matrix.colname), "trans", NA)]
 coeffs[, cisx := ifelse(qtl_type=="cis-x", 1, 0)]
 coeffs[qtl_type=="cis-x", qtl_type := "cis"]
 
@@ -74,7 +72,7 @@ coeffs[qtl_type=="cis-x", qtl_type := "cis"]
 
 #coeffs[, chromosome := factor(chromosome, levels=c(1:22, "X", "Y"))]
 
-## compute standardize log odds ratio
+## compute standardised log odds ratio
 if (binary) coeffs[, Estimate := Estimate * sdscore]
 
 genes.duplicated <- coeffs[, .N, by=.(gene_symbol, qtl_type, cisx)][N > 1, gene_symbol]
@@ -94,20 +92,19 @@ if (analysis == "eQTL") {
                          value.var=c("regions",
                                      "locus.diversity", "numscores", "Estimate", "pvalue",
                                      "minuslog10p"))
-	setnames(coeffs.wide, "regions_trans", "regions")
-	setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
+    setnames(coeffs.wide, "regions_trans", "regions")
+    setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 }
 if (analysis == "pQTL") {
     coeffs.wide <- dcast(coeffs.unique,
                          gene_symbol + gene_chrom + gene_startpos + gene_endpos ~ qtl_type,
                          value.var=c("numscores", "Estimate", "pvalue", "locus.diversity",
                                      "minuslog10p"))
-	setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
+    setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 }
 
 setkey(coeffs.wide, gene_symbol)
 setkey(genes.info, gene_symbol)
-
 
 ## merge coeffs.wide with annotation of known T1D and T2D genes
 coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,

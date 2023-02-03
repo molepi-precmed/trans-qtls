@@ -2,9 +2,10 @@
 #' example of how to read the phenotype file and ensure exact match between the
 #' samples samples in the scores and in the phenotype.
 ## =============================================================================
-## read individual-level phenotype dataset
-pheno.str <- ifelse(skip.second, paste0("sed -e '2d' ",pheno.file), pheno.file)
-phenotype <- fread(cmd=pheno.str)
+## read individual-level phenotype dataset. If the phenotype file has
+## SNPTEST-like formatting then read starting from the second row
+cmd <- ifelse(skip.second.row, paste0("sed -e '2d' ", pheno.file), pheno.file)
+phenotype <- fread(cmd=cmd)
 
 ## by default GENOSCORES merges the family id (FID) and individual id (IID)
 ## into a single identifier: FID_IID. You may need to ensure that sample ids in

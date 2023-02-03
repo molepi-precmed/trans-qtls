@@ -154,7 +154,7 @@ if (analysis == "pQTL") {
 
     ## trans scores identified in matrix only by gene_symbol, so may have been
     ## summed over multiple gwasids
-	pqtl.tscores.info <- unique(trans.genome.wide.scoresinfo[qtl_type=="trans",
+    pqtl.tscores.info <- unique(trans.genome.wide.scoresinfo[qtl_type=="trans",
         .(numscores=.N,
           scoreids=paste(scoreid, collapse=","),
           gwasids=paste(gwasid, collapse=","),

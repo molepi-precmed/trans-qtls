@@ -309,7 +309,7 @@ liftover.positions <- function(CHR, BP) {
                 file=positions37.bed)
     cmd <- sprintf("liftOver %s %s %s unMapped",
                    positions37.bed, chain.file, positions38.bed)
-	system(cmd)
+    system(cmd)
     positions38 <- fread(positions38.bed)
     positions38 <- positions38[, c(4, 2)]
     colnames(positions38) <- c("rowname", "pos.hg38")
