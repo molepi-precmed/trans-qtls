@@ -70,8 +70,6 @@ coeffs[qtl_type=="cis-x", qtl_type := "cis"]
 ## temporary fix for unmatched gene_symbol -- but these rows have regions NA
 # coeffs[is.na(gene_symbol) & substr(matrix.colname, 1, 2) != "X_", gene_symbol := matrix.colname]
 
-#coeffs[, chromosome := factor(chromosome, levels=c(1:22, "X", "Y"))]
-
 ## compute standardised log odds ratio
 if (binary) coeffs[, Estimate := Estimate * sdscore]
 
@@ -112,4 +110,5 @@ coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
 
 ## annotate genes by whether they are known cause for monogenic diabetes
 coeffs.wide[, monogenic := ifelse(gene_symbol %in% t1d.monogenes, "+", ".")]
+
 save(coeffs.wide, file=file.path(output.dir, "coeffs.wide.RData")
