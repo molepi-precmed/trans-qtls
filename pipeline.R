@@ -46,7 +46,6 @@ source("helperfunctions.R")
 #' @param regions.maxsep Integer (currently not used) max 100 kb between
 #'                       regions.
 #' @param newrun Logical setting whether to compute associations from scratch.
-
 include.hla <- FALSE
 fdr=0.01
 flanksize.kb <- 200
@@ -94,13 +93,12 @@ newrun=TRUE
 #' @param gscript Set path to the GENOSCORES analysis R script.
 #' @note You can create multiple example scripts - each for a different study,
 #'         or you can provide a vector of many studies to `example.analysis.R`.
-
 output.dir <- file.path(...)
 basename <- file.path(...)
 gscript <- file.path("genoscores", "example.analysis.R")
 
 cmd <- sprintf("bash genoscores/analysis.cli.sh %s %s %s",
-               output.dir, basename, gscript)
+              output.dir, basename, gscript)
 system(cmd)
 
 ##------------------------------------------------------------------------------
@@ -141,6 +139,9 @@ source("qtl.metadata.R")
 ##------------------------------------------------------------------------------
 pheno.file <- file.path(...)
 
+# set to TRUE for SNPTEST-style phenotype files with two header lines
+skip.second.row <- TRUE
+
 ## script below is a short guideline. You may need to extend it according to the
 ## specific analysis requirements.
 source("phenotype.R")
@@ -153,10 +154,10 @@ source("phenotype.R")
 #'        phenotype is to be analysed.
 #' @param output.dir Full path to the directory where the association results
 #'        will be saved.
-binary <- TRUE
+binary <- FALSE
 output.dir <- file.path(...)
 
-## register parallelisation mode to run several chromosomes at a time
+## register parallelisation mode
 options(cores=4)
 
 source("association.R")
