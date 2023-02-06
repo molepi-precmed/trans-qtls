@@ -63,18 +63,14 @@ table(coeffs$qtl_type, exclude=NULL)
 ## for converting the results to format which is easy to use in publication.
 
 ## manage cis, cis-x and trans labels
-coeffs[is.na(qtl_type), qtl_type :=
-       ifelse(substr(matrix.colname, 1, 2) == "X_", "trans", "cis")]
-coeffs[is.na(qtl_type) & qtl_type=="cis", gene_symbol := matrix.colname]
+coeffs[is.na(qtl_type), qtl_type := ifelse(grep("trans$", matrix.colname), "trans", NA)]
 coeffs[, cisx := ifelse(qtl_type=="cis-x", 1, 0)]
 coeffs[qtl_type=="cis-x", qtl_type := "cis"]
 
 ## temporary fix for unmatched gene_symbol -- but these rows have regions NA
 # coeffs[is.na(gene_symbol) & substr(matrix.colname, 1, 2) != "X_", gene_symbol := matrix.colname]
 
-coeffs[, chromosome := factor(chromosome, levels=c(1:22, "X", "Y"))]
-
-## compute standardize log odds ratio
+## compute standardised log odds ratio
 if (binary) coeffs[, Estimate := Estimate * sdscore]
 
 genes.duplicated <- coeffs[, .N, by=.(gene_symbol, qtl_type, cisx)][N > 1, gene_symbol]
@@ -90,22 +86,23 @@ coeffs.unique <- unique(coeffs, by=c("gene_symbol", "qtl_type"))
 ## effects
 if (analysis == "eQTL") {
     coeffs.wide <- dcast(coeffs.unique,
-                         gene_symbol + chromosome + gene_startpos + gene_endpos ~ qtl_type,
+                         gene_symbol + gene_chrom + gene_startpos + gene_endpos ~ qtl_type,
                          value.var=c("regions",
                                      "locus.diversity", "numscores", "Estimate", "pvalue",
                                      "minuslog10p"))
+    setnames(coeffs.wide, "regions_trans", "regions")
+    setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 }
 if (analysis == "pQTL") {
     coeffs.wide <- dcast(coeffs.unique,
                          gene_symbol + gene_chrom + gene_startpos + gene_endpos ~ qtl_type,
                          value.var=c("numscores", "Estimate", "pvalue", "locus.diversity",
                                      "minuslog10p"))
+    setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 }
 
 setkey(coeffs.wide, gene_symbol)
 setkey(genes.info, gene_symbol)
-setnames(coeffs.wide, "regions_trans", "regions")
-setnames(coeffs.wide, "locus.diversity_trans", "locus.diversity")
 
 ## merge coeffs.wide with annotation of known T1D and T2D genes
 coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
@@ -113,3 +110,5 @@ coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
 
 ## annotate genes by whether they are known cause for monogenic diabetes
 coeffs.wide[, monogenic := ifelse(gene_symbol %in% t1d.monogenes, "+", ".")]
+
+save(coeffs.wide, file=file.path(output.dir, "coeffs.wide.RData")

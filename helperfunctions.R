@@ -302,13 +302,14 @@ liftover.positions <- function(CHR, BP) {
     positions37 <- data.table(CHR, BP=as.integer(BP))
     positions37[, rowname := sprintf("row%09d", .I)]
     write.table(positions37[, .(chrom=paste0("chr", CHR),
-                              chromStart=BP,
+                              chromStart=BP-1,
                               chromEnd=BP,
                               name=rowname)],
                 row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t",
                 file=positions37.bed)
     cmd <- sprintf("liftOver %s %s %s unMapped",
                    positions37.bed, chain.file, positions38.bed)
+    system(cmd)
     positions38 <- fread(positions38.bed)
     positions38 <- positions38[, c(4, 2)]
     colnames(positions38) <- c("rowname", "pos.hg38")
