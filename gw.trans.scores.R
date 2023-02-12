@@ -156,23 +156,31 @@ cis.scoreids <- ans[qtl_type=="cis" | qtl_type=="cis-x", scoreid]
 genome.wide.scores <- fs[, colnames(fs) %in% cis.scoreids]
 ## we proceed by gwasid computing genome-wide trans scores per GWAS
 ## TODO: see issue #27
-candidate.scores <- ans[qtl_type=="trans" & minpvalue<1E-6]
-n.trans <- candidate.scores[, .N, by="gwasid"]
+n.trans <- ans[qtl_type=="trans" & minpvalue<1E-6, .N, by="gwasid"]
 gwas.with.single.score <- n.trans[N==1, gwasid]
-single.trans.scores <- candidate.scores[gwasid %in% gwas.with.single.score]
-trans.matrix <- fs[, colnames(fs) %in% single.trans.scores$scoreid]
+single.trans.scoreids <- ans[qtl_type=="trans" & minpvalue<1E-6 &
+                             gwasid %in% gwas.with.single.score, scoreid]
+trans.matrix <- fs[, colnames(fs) %in% single.trans.scoreids]
+
 ## create a trans score id as X_<gwasid>_trans
-scorenames <- sprintf("X_%s_trans", single.trans.scores$gwasid)
+ans[scoreid %in% single.trans.scoreids, scoreid := sprintf("X_%s_trans", gwasid)]
+scorenames <- ans[grep("trans", scoreid), scoreid]
 colnames(trans.matrix) <- scorenames
 genome.wide.scores <- cbind(genome.wide.scores, trans.matrix)
 
-## sum all trans scores per GWAS
+## sanity checks
+stopifnot(all(colnames(trans.matrix) %in% colnames(genome.wide.scores)))
+stopifnot(all(colnames(trans.matrix) %in% ans[, scoreid]))
+
+## sum up multiple trans scores per gwas
 gwas.with.many.scores <- n.trans[N>1]
 for (this.gwasid in gwas.with.many.scores[, gwasid]) {
-    this.scoreids <- candidate.scores[gwasid==this.gwasid, scoreid]
-    this.scores <- matrix(rowSums(fs[, colnames(fs) %in% this.scoreids]))
-    colnames(this.scores) <- sprintf("X_%s_trans", this.gwasid)
-    genome.wide.scores <- cbind(genome.wide.scores, this.scores)
+    this.scoreids <- ans[qtl_type=="trans" & minpvalue<1E-6 &
+                         gwasid==this.gwasid, scoreid]
+    this.combined.score <- matrix(rowSums(fs[, colnames(fs) %in% this.scoreids]))
+    ans[scoreid %in% this.scoreids, scoreid := sprintf("X_%s_trans", this.gwasid)]
+    colnames(this.combined.score) <- sprintf("X_%s_trans", this.gwasid)
+    genome.wide.scores <- cbind(genome.wide.scores, this.combined.score)
 }
 
 ans <- ans[order(gene_symbol)]
