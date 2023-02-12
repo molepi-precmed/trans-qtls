@@ -184,6 +184,8 @@ for (this.gwasid in gwas.with.many.scores[, gwasid]) {
 }
 
 ans <- ans[order(gene_symbol)]
+trans.genome.wide.scoresinfo <- ans[(qtl_type=="cis" | qtl_type=="cis-x") |
+                                    (qtl_type=="trans" &  minpvalue<1E-6)]
 
 #' Check that all scores were aggregated correctly.
 ##------------------------------------------------------------------------------
@@ -198,7 +200,6 @@ stopifnot(identical(all.trans[order(all.trans)], trans[order(trans)]))
 
 #' Save processed scores.
 ##------------------------------------------------------------------------------
-trans.genome.wide.scoresinfo <- ans
 save(genome.wide.scores,
      file=file.path(output.dir, "trans.genotypicscore.1e-6.Rdata.gz"))
 save(trans.genome.wide.scoresinfo,
