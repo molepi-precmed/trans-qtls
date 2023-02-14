@@ -74,7 +74,11 @@ if (analysis == "eQTL") {
     ## for cis scores the scores matrix colname is the locus-specific scoreid
     tscores.info <- trans.genome.wide.scoresinfo[qtl_type=="trans",
         .(numscores=.N,
+<<<<<<< HEAD
+          matrix.colname=paste0("X_",gwasid,"_trans"),
+=======
           matrix.colname=paste0("X_", gwasid, "_trans"),
+>>>>>>> fc755ff176dffa9aa41c3e312c1cd37cefba6731
           qtl_type="trans",
           gene_symbol=gene_symbol[1],
           gene_chrom=gene_chrom[1],
@@ -99,7 +103,6 @@ if (analysis == "eQTL") {
     ## recode cis-x as cis but keep an indicator for cis-x
     allscores.info[, cisx := qtl_type=="cis-x"]
     allscores.info[qtl_type=="cis-x", qtl_type := "cis"]
-    setnames(allscores.info, "gene_chrom", "chromosome")
 
     table(allscores.info$matrix.colname %in% colnames(genome.wide.scores))
     ## remove rows not matched in scores table
@@ -159,7 +162,11 @@ if (analysis == "pQTL") {
           scoreids=paste(scoreid, collapse=","),
           gwasids=paste(gwasid, collapse=","),
           numgwas=length(unique(gwasid)),
+<<<<<<< HEAD
+          matrix.colname=paste0("X_",gwasid,"_trans"),
+=======
           matrix.colname=paste0("X_", gwasid, "_trans"),
+>>>>>>> fc755ff176dffa9aa41c3e312c1cd37cefba6731
           qtl_type="trans",
           gene_symbol=gene_symbol[1],
           gene_chrom=gene_chrom[1],

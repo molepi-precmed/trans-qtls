@@ -14,12 +14,14 @@
 all.scores <- NULL
 all.scoresinfo <- NULL
 for (idx in 1:22) {
+	if(idx!=6){
     cat("Processing scores on chromosome", idx, "\n")
     load(file.path(score.dir, idx, "genotypicscore.Rdata.gz"))
     all.scores <- cbind(all.scores, score)
     cat("Processing scoresinfo on chromosome", idx, "\n")
     load(file.path(score.dir, idx, "scoresinfo.Rdata.gz"))
     all.scoresinfo <- rbind(all.scoresinfo, scoresinfo)
+	}
 }
 rm(score)
 rm(scoresinfo)
@@ -55,7 +57,7 @@ if (include.hla) {
 #' sum up all scores to generate a single genome-wide score also including cis
 #' effects.
 ##------------------------------------------------------------------------------
-if (analysis == "immunecells")) {
+if (analysis == "immunecells") {
     cat("Immune cells cannot be currently annotated. Skipping.\n")
     ans[, trait_name := gsub(":", "_", trait_name)]
     ans[, trait_name := gsub(" ", "_", trait_name)]
@@ -101,13 +103,13 @@ if (analysis == "immunecells")) {
 ##------------------------------------------------------------------------------
 if (analysis == "eQTL") ans <- annotate.qtls(ans)
 
-if (analysis == "pQTL")
-    stop("pQTLs cannot be annotated via API. Contact us for help.\n")
+if (analysis == "pQTL"){
+#    stop("pQTLs cannot be annotated via API. Contact us for help.\n")
 
 ## DO NOT RUN. This block can be used only on GENOSCORES server directly. You
 ## can inspect `annotate.pqtls.R` and write a similar script to manually
 ## annotate pQTL scores if you have a uniprot table available locally.
-if (FALSE) {
+#if (FALSE) {
     ## TODO: create API function to annotate pQTLs (see !217)
     source("annotate.pqtls.R")
     genoscores.connect(3308)
