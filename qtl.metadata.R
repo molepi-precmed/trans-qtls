@@ -74,11 +74,7 @@ if (analysis == "eQTL") {
     ## for cis scores the scores matrix colname is the locus-specific scoreid
     tscores.info <- trans.genome.wide.scoresinfo[qtl_type=="trans",
         .(numscores=.N,
-<<<<<<< HEAD
-          matrix.colname=paste0("X_",gwasid,"_trans"),
-=======
           matrix.colname=paste0("X_", gwasid, "_trans"),
->>>>>>> fc755ff176dffa9aa41c3e312c1cd37cefba6731
           qtl_type="trans",
           gene_symbol=gene_symbol[1],
           gene_chrom=gene_chrom[1],
@@ -162,11 +158,7 @@ if (analysis == "pQTL") {
           scoreids=paste(scoreid, collapse=","),
           gwasids=paste(gwasid, collapse=","),
           numgwas=length(unique(gwasid)),
-<<<<<<< HEAD
-          matrix.colname=paste0("X_",gwasid,"_trans"),
-=======
           matrix.colname=paste0("X_", gwasid, "_trans"),
->>>>>>> fc755ff176dffa9aa41c3e312c1cd37cefba6731
           qtl_type="trans",
           gene_symbol=gene_symbol[1],
           gene_chrom=gene_chrom[1],

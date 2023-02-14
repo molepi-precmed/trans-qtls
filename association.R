@@ -116,8 +116,4 @@ coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
 ## annotate genes by whether they are known cause for monogenic diabetes
 coeffs.wide[, monogenic := ifelse(gene_symbol %in% t1d.monogenes, "+", ".")]
 
-<<<<<<< HEAD
 save(coeffs.wide, file=file.path(output.dir, "coeffs.wide.RData"))
-=======
-save(coeffs.wide, file=file.path(output.dir, "coeffs.wide.RData")
->>>>>>> fc755ff176dffa9aa41c3e312c1cd37cefba6731
