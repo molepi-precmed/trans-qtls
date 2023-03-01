@@ -46,7 +46,7 @@ if(newrun) {
 
 # Make sure that regressions were run for all scores
 if(nrow(coeffs) != length(scoreids)){
-	stop('Number of associations does not equal the number of scores.')
+    stop('Number of associations does not equal the number of scores.')
 }
 
 ## merge coeffs with scores metadata
