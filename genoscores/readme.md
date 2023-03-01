@@ -12,7 +12,8 @@ We compute the regional scores in the specified target cohort using weights from
   - `gscript` -- path to the GENOSCORES script.
   - `N` -- how many chromosomes do you want to run in parallel? This depends on the size of the target cohort and available computational resources.
   - `inputfile` -- modify accordingly to the full name of your target cohort files. If the names have any suffixes after chromosome ID, these need to be added.
-  
+3. [analysis.hpc.cli.sh](analysis.hpc.cli.sh) is a BASH script which executes [example.analysis.R](example.analysis.R) for a single specified chromosome. This script takes one additional CLI argument `chr` which denotes the chromosome number for which analysis is to be run. This script is useful for high performance computing (HPC) type of analysis where each chromsome can be submitted to a queue within a job array created by the job script.
+
 ## General notes
 
 1. If multiple analyses are to be run (eQTL, pQTL, etc), then it may be helpful to either:
