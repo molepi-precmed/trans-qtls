@@ -55,7 +55,7 @@ if (include.hla) {
 #' sum up all scores to generate a single genome-wide score also including cis
 #' effects.
 ##------------------------------------------------------------------------------
-if (analysis == "immunecells")) {
+if (analysis == "immunecells") {
     cat("Immune cells cannot be currently annotated. Skipping.\n")
     ans[, trait_name := gsub(":", "_", trait_name)]
     ans[, trait_name := gsub(" ", "_", trait_name)]

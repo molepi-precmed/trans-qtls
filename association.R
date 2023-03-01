@@ -44,6 +44,11 @@ if(newrun) {
     load(file.path(output.dir, "coeffs.RData"))
 }
 
+# Make sure that regressions were run for all scores
+if(nrow(coeffs) != length(scoreids)){
+    stop('Number of associations does not equal the number of scores.')
+}
+
 ## merge coeffs with scores metadata
 if (analysis=="eQTL")
     scoresinfo <- allscores.info
@@ -111,4 +116,4 @@ coeffs.wide <- genes.info[, .(gene_symbol, gene_biotype, is.t1dgene, is.t2dgene,
 ## annotate genes by whether they are known cause for monogenic diabetes
 coeffs.wide[, monogenic := ifelse(gene_symbol %in% t1d.monogenes, "+", ".")]
 
-save(coeffs.wide, file=file.path(output.dir, "coeffs.wide.RData")
+save(coeffs.wide, file=file.path(output.dir, "coeffs.wide.RData"))

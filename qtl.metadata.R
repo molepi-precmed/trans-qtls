@@ -99,7 +99,6 @@ if (analysis == "eQTL") {
     ## recode cis-x as cis but keep an indicator for cis-x
     allscores.info[, cisx := qtl_type=="cis-x"]
     allscores.info[qtl_type=="cis-x", qtl_type := "cis"]
-    setnames(allscores.info, "gene_chrom", "chromosome")
 
     table(allscores.info$matrix.colname %in% colnames(genome.wide.scores))
     ## remove rows not matched in scores table
