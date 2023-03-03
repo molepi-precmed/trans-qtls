@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#' This script is used to run GENOSCORES on a single chromosome in an HPC
+#' This script is used to run GENOSCORES on a single chromosome in a HPC
 #' environment with qsub
 ## ============================================================================
 
@@ -28,7 +28,7 @@ chr=$4
 ## 'cohort_chr21_filtered', they need to be manually added to inputfile:
 ## inputfile="${basename}/cohort_chr${chr}_filtered"
 processchrom() {
-    inputfile="${basename}/RA_Control.final_${chr}"
+    inputfile="${basename}/${chr}"
     chromdir="${outputdir}/${chr}"
 
     if [[ ! -d "${chromdir}" ]]; then

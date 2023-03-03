@@ -98,7 +98,11 @@ basename <- file.path(...)
 gscript <- file.path("genoscores", "example.analysis.R")
 
 cmd <- sprintf("bash genoscores/analysis.cli.sh %s %s %s",
-              output.dir, basename, gscript)
+               output.dir, basename, gscript)
+## Alternatively, we could run analysis.hpc.cli.sh specifying chromosome number
+## as additional parmeter. This is useful when submitting job arrays on HPC
+## cluster, where each job ID corresponds to a single chromosome analysis.
+
 system(cmd)
 
 ##------------------------------------------------------------------------------
