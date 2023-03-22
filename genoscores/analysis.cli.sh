@@ -58,8 +58,8 @@ processchrom() {
     ##           the analysis for the current chromosome.
     ## inputfile: PLINK file with the current chromosome.
     ## logfile: file to store the logs from GENOSCORES.
-    # Rscript --no-save --no-restore --verbose "$(realpath "${gscript}")" \
-#          "${chromdir}" "${inputfile}" 2> "${logfile}" > /dev/null
+    Rscript --no-save --no-restore --verbose "$(realpath "${gscript}")" \
+            "${chromdir}" "${inputfile}" 2> "${logfile}" > /dev/null
     echo "Done."
 }
 
