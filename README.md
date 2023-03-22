@@ -1,13 +1,20 @@
-# Trans-QTL pipeline
+# Genomewide aggregated trans- effects (GATE) computational pipeline
 
-Main script: [pipeline.R](pipeline.R)
+This pipeline is used to compute genome-wide trans scores in a target cohort and learn the “core genes”. 
+The code in this repository was used to reporoduce in the analysis reported in:
 
-This pipeline is used to compute genome-wide trans scores in a target cohort and learn the “core genes”. The procedure consists of the following:
+
+*Iakovliev, A., McGurnaghan, S., Hayward, C., Colombo, M., Lipschutz, D., Spiliopoulou, A., Colhoun, H.M., McKeigue, P.M., 2023. Trans-eQTL effects on risk of type 1 diabetes: a test of the sparse effector (omnigenic) hypothesis of complex trait genetics. American Journal of Human Genetics (in press).*
+
+
+The procedure consists of the following:
 
 1.  Compute the regional genotypic scores in the target cohort using weights from published eQTL, pQTL and other studies available at [https://genoscores.cphs.mvm.ed.ac.uk/studies](https://genoscores.cphs.mvm.ed.ac.uk/studies).
 2.  Classify the scores into cis, cis-x and trans depending on the distance from the corresponding transcript.
 3.  Construct genome-wide trans scores by aggregating regional trans scores.
 4.  Perform downstream analysis to identify “core genes”.
+
+Main script: [pipeline.R](pipeline.R)
 
 ## Details
 
