@@ -1,18 +1,20 @@
 # Genomewide aggregated trans- effects (GATE) computational pipeline
 
-This pipeline is used to compute genome-wide trans scores in a target cohort and learn the “core genes”. 
+The method is based on the Omnigenic model <a href="https://doi.org/10.1016%2Fj.cell.2017.05.038">(Boyle et al., 2017)</a> and can be applied to detect effector (core) genes mediating the disease.
+          The pipeline makes use of the <a href="https://genoscores.cphs.mvm.ed.ac.uk/">GENOSCORES</a> platform to compute eQTL and pQTL scores and 
+          aggregate the trans QTL effects into genomewide scores which are then tested for association with the disease.
+          
 The code in this repository was used in the analysis reported in:
 
 
 *Iakovliev, A., McGurnaghan, S., Hayward, C., Colombo, M., Lipschutz, D., Spiliopoulou, A., Colhoun, H.M., McKeigue, P.M., 2023. Trans-eQTL effects on risk of type 1 diabetes: a test of the sparse effector (omnigenic) hypothesis of complex trait genetics. American Journal of Human Genetics (in press).*
-
 
 The procedure consists of the following:
 
 1.  Compute the regional genotypic scores in the target cohort using weights from published eQTL, pQTL and other studies available at [https://genoscores.cphs.mvm.ed.ac.uk/studies](https://genoscores.cphs.mvm.ed.ac.uk/studies).
 2.  Classify the scores into cis, cis-x and trans depending on the distance from the corresponding transcript.
 3.  Construct genome-wide trans scores by aggregating regional trans scores.
-4.  Perform downstream analysis to identify “core genes”.
+4.  Perform downstream analysis to identify core genes.
 
 Main script: [pipeline.R](pipeline.R)
 
@@ -91,4 +93,4 @@ The above code defines a framework sufficient to identify the "core genes" in th
 
 ## License
 
-This code was developed by Paul McKeigue and Andri Iakovliev and is licensed under [GPL-3 license](https://www.gnu.org/licenses/gpl-3.0.txt)
+This code was developed by [Paul McKeigue](https://precmed.cphs.mvm.ed.ac.uk/pmckeigue/) and [Andri Iakovliev](https://whimsial.github.io/) and is licensed under [GPL-3 license](https://www.gnu.org/licenses/gpl-3.0.txt)
