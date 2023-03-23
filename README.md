@@ -1,7 +1,7 @@
 # Genomewide aggregated trans- effects (GATE) computational pipeline
 
 This pipeline is used to compute genome-wide trans scores in a target cohort and learn the “core genes”. 
-The code in this repository was used to reporoduce in the analysis reported in:
+The code in this repository was used in the analysis reported in:
 
 
 *Iakovliev, A., McGurnaghan, S., Hayward, C., Colombo, M., Lipschutz, D., Spiliopoulou, A., Colhoun, H.M., McKeigue, P.M., 2023. Trans-eQTL effects on risk of type 1 diabetes: a test of the sparse effector (omnigenic) hypothesis of complex trait genetics. American Journal of Human Genetics (in press).*
