@@ -4,6 +4,8 @@ The method is based on the Omnigenic model <a href="https://doi.org/10.1016%2Fj.
           The pipeline makes use of the <a href="https://genoscores.cphs.mvm.ed.ac.uk/">GENOSCORES</a> platform to compute eQTL and pQTL scores and 
           aggregate the trans QTL effects into genomewide scores which are then tested for association with the disease.
           
+The summary-level data accompanying the paper is released separately: https://doi.org/10.5281/zenodo.7786862
+          
 The code in this repository was used in the analysis reported in:
 
 
