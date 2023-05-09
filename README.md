@@ -9,7 +9,7 @@ The summary-level data accompanying the paper is released separately: https://do
 The code in this repository was used in the analysis reported in:
 
 
-*Iakovliev, A., McGurnaghan, S., Hayward, C., Colombo, M., Lipschutz, D., Spiliopoulou, A., Colhoun, H.M., McKeigue, P.M., 2023. Trans-eQTL effects on risk of type 1 diabetes: a test of the sparse effector (omnigenic) hypothesis of complex trait genetics. American Journal of Human Genetics (in press).*
+*Iakovliev, A., McGurnaghan, S., Hayward, C., Colombo, M., Lipschutz, D., Spiliopoulou, A., Colhoun, H.M., McKeigue, P.M., 2023. Trans-eQTL effects on risk of type 1 diabetes: a test of the sparse effector (omnigenic) hypothesis of complex trait genetics. American Journal of Human Genetics. https://doi.org/10.1016/j.ajhg.2023.04.003
 
 The procedure consists of the following:
 
