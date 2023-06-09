@@ -150,6 +150,15 @@ stopifnot(identical(colnames(fs), ans[, scoreid]))
 ## group by gene
 ans <- ans[, .SD, by=gene_symbol]
 
+## save annotated scoresinfo which contains metadata on all individual scores
+## contributing to the genome-wide aggregated trans-scores
+##
+## Merging individual scores into genome-wide trans- scores looses the metadata
+## which would otherwise be useful for locus annotation. Thus, we save
+## processed and annotated metadata before computing genome-wide trans-scores
+## to retain this information.
+save(ans, file=file.path(output.dir, "all.scoresinfo.annotated.Rdata.gz"))
+
 ## sum trans scores and keep cis score corresponding to each gene
 genome.wide.scores <- NULL
 cis.scoreids <- ans[qtl_type=="cis" | qtl_type=="cis-x", scoreid]
