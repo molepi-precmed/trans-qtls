@@ -294,21 +294,23 @@ position.absolute <- function(CHR, BP, padding=0) {
 }
 
 ## lift positions from hg19 (GRCh37) to hg38
-liftover.positions <- function(CHR, BP) {
-    positions37.bed <- file.path("helper-data", "positions37.bed")
-    positions38.bed <- file.path("helper-data", "positions38.bed")
-    chain.file <- file.path("helper-data", "hg19ToHg38.over.chain")
+liftover.positions <- function(CHR, BP, data.dir) {
+    positions37.bed <- file.path(data.dir, "positions37.bed")
+    positions38.bed <- file.path(data.dir, "positions38.bed")
+    chain.file <- file.path(data.dir, "hg19ToHg38.over.chain")
+    unmapped <- file.path(data.dir, "unmapped")
 
     positions37 <- data.table(CHR, BP=as.integer(BP))
     positions37[, rowname := sprintf("row%09d", .I)]
-    write.table(positions37[, .(chrom=paste0("chr", CHR),
-                              chromStart=BP-1,
-                              chromEnd=BP,
-                              name=rowname)],
+    positions37[, CHR := paste0("chr", CHR)]
+    write.table(positions37[, .(chrom=CHR,
+                                chromStart=BP-1,
+                                chromEnd=BP,
+                                name=rowname)],
                 row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t",
                 file=positions37.bed)
-    cmd <- sprintf("liftOver %s %s %s unMapped",
-                   positions37.bed, chain.file, positions38.bed)
+    cmd <- sprintf("liftOver %s %s %s %s",
+                   positions37.bed, chain.file, positions38.bed, unmapped)
     system(cmd)
     positions38 <- fread(positions38.bed)
     positions38 <- positions38[, c(4, 2)]
@@ -319,4 +321,3 @@ liftover.positions <- function(CHR, BP) {
     setorder(positions, rowname)
     return(positions[, pos.hg38])
 }
-
