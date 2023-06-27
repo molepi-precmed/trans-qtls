@@ -108,7 +108,7 @@ if (analysis == "eQTL") {
     scores.sd <- data.table(matrix.colname=names(scores.sd), sdscore=as.numeric(scores.sd))
     setkey(scores.sd, matrix.colname)
     setkey(allscores.info, matrix.colname)
-    allscores.info <- scores.sd[allscores.info]
+    allscores.info <- scores.sd[allscores.info, on="matrix.colname"]
 }
 
 if (analysis == "pQTL") {
@@ -186,6 +186,5 @@ if (analysis == "pQTL") {
     scores.sd <- apply(genome.wide.scores, 2, sd)
     scores.sd <- data.table(matrix.colname=names(scores.sd), sdscore=as.numeric(scores.sd))
     setkey(scores.sd, matrix.colname)
-    pqtl.allscores.info <- scores.sd[pqtl.allscores.info]
-    
+    pqtl.allscores.info <- scores.sd[pqtl.allscores.info, on="matrix.colname"]
 }
