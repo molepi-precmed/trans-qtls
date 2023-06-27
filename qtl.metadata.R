@@ -180,5 +180,12 @@ if (analysis == "pQTL") {
           gene_startpos, gene_endpos),
         by=.(traitid, gwasid)]
 
+    ## combine the trans and cis scores
     pqtl.allscores.info <- rbind(pqtl.tscores.info, pqtl.cscores.info, fill=TRUE)
+    
+    scores.sd <- apply(genome.wide.scores, 2, sd)
+    scores.sd <- data.table(matrix.colname=names(scores.sd), sdscore=as.numeric(scores.sd))
+    setkey(scores.sd, matrix.colname)
+    pqtl.allscores.info <- scores.sd[pqtl.allscores.info]
+    
 }
